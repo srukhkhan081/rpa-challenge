@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from RPA.Excel.Files import Files
 from RPA.Archive import Archive
@@ -95,8 +96,9 @@ class NewsScraper:
                 self.go_to_next_page()
 
     def dump_report(self):
-        archiver = Archive()
-        archiver.archive_folder_with_zip(IMAGE_PATH, OUTPUT_PATH + 'images.zip')
+        if os.listdir(IMAGE_PATH):
+            archiver = Archive()
+            archiver.archive_folder_with_zip(IMAGE_PATH, OUTPUT_PATH + 'images.zip')
         rows = []
         for news in self.news_list:
             rows.append({
