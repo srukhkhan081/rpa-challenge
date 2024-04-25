@@ -1,6 +1,7 @@
 import datetime
 
 from RPA.Excel.Files import Files
+from RPA.Archive import Archive
 from dateutil.relativedelta import relativedelta
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
@@ -8,7 +9,7 @@ from selenium.webdriver.common.by import By
 from browser import Browser
 from exceptions import DateLimitReachException
 from models import News
-from utils import convert_string_to_date_time, OUTPUT_PATH, logger
+from utils import convert_string_to_date_time, OUTPUT_PATH, logger, IMAGE_PATH
 
 
 class NewsScraper:
@@ -94,6 +95,8 @@ class NewsScraper:
                 self.go_to_next_page()
 
     def dump_report(self):
+        archiver = Archive()
+        archiver.archive_folder_with_zip(IMAGE_PATH, OUTPUT_PATH + 'images.zip')
         rows = []
         for news in self.news_list:
             rows.append({
