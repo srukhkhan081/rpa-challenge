@@ -5,7 +5,7 @@ tasks:
   Default:
     command:
       - python
-      - task.py
+      - tasks.py
 
 environmentConfigs:
   - environment_windows_amd64_freeze.yaml
