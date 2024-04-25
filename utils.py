@@ -30,7 +30,7 @@ def create_path_if_not_exists(path):
 
 
 OUTPUT_PATH = f"{os.getcwd()}/output/"
-IMAGE_PATH = f"{OUTPUT_PATH}/images/"
+IMAGE_PATH = f"{os.getcwd()}/images/"
 
 create_path_if_not_exists(OUTPUT_PATH)
 create_path_if_not_exists(IMAGE_PATH)
