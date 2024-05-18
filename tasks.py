@@ -20,6 +20,7 @@ else:
     topics = 'Sports'
 
 filter_topics = [topic.strip() for topic in topics.split(',')]
+
 scrapper = NewsScraper(search_phrase=search_phrase, topics=filter_topics, month=months)
 
 scrapper.process()

@@ -14,8 +14,19 @@ from utils import convert_string_to_date_time, OUTPUT_PATH, logger, IMAGE_PATH
 
 
 class NewsScraper:
+    """
+    Class to scrape news articles from a LA times.
+    """
 
     def __init__(self, search_phrase: str, topics: list = None, month: int = 0):
+        """
+        Initialize the NewsScraper object.
+
+        Args:
+            search_phrase (str): The phrase to search for in news articles.
+            topics (list, optional): List of topics to filter the news by. Defaults to None.
+            month (int, optional): Number of months to consider for news articles. Defaults to 0.
+        """
         self.browser = Browser()
         self.url = 'https://www.latimes.com/'
         self.news_list = []
@@ -25,20 +36,35 @@ class NewsScraper:
         self.topics = topics if topics else []
 
     def open_news_site(self):
+        """
+        Open the news website in the browser.
+        """
         if self.browser.driver.location == self.url:
             return None
         else:
             self.browser.open_site(url=self.url, page_load_time=20)
 
     def search_news(self):
+        """
+        Search for news articles using the provided search phrase.
+        """
         self.browser.click_element('//button[@data-element="search-button"]')
         self.browser.input_text('//input[@data-element="search-form-input"]', self.search_text)
         self.browser.driver.press_keys('//input[@data-element="search-form-input"]', Keys.ENTER)
 
     def sort_news(self, order: str = "1"):
+        """
+        Sort the news articles based on the specified order.
+
+        Args:
+            order (str, optional): The sorting order. Defaults to "1" which state newest.
+        """
         self.browser.select_dropdown_option_by_value('//select[@class="select-input"]', order)
 
     def select_topic(self):
+        """
+        Select the topics to filter the news articles.
+        """
         for topic in self.topics:
             topic_locator = f"//span[text()='{topic}']//preceding-sibling::input"
             if self.browser.check_if_element_exists(topic_locator):
@@ -53,6 +79,9 @@ class NewsScraper:
                     ...
 
     def handle_promo_pop_up(self):
+        """
+        Handle promotional pop-ups on the news website.
+        """
         self.browser.driver.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         if self.browser.check_if_element_exists('//modality-custom-element'):
             element = self.browser.get_element('//modality-custom-element')
@@ -60,15 +89,27 @@ class NewsScraper:
             close_button.click()
 
     def check_if_last_page(self):
+        """
+        Check if the current page is the last page of search results.
+
+        Returns:
+            bool: True if the current page is the last page, False otherwise.
+        """
         page_counts = self.browser.get_element('//div[@class="search-results-module-page-counts"]').text
         current_page, last_page = [text.strip() for text in page_counts.split("of")]
         return current_page == last_page
 
     def go_to_next_page(self):
+        """
+        Navigate to the next page of search results.
+        """
         next_page_button = self.browser.get_element('//div[@class="search-results-module-next-page"]')
         next_page_button.click()
 
     def scrap_news(self):
+        """
+        Scrape news articles from the search results.
+        """
         start = 0
         while True:
             news_elements = self.browser.get_elements('//ul[@class="search-results-module-results-menu"]//li')
@@ -96,6 +137,9 @@ class NewsScraper:
                 self.go_to_next_page()
 
     def dump_report(self):
+        """
+        Dump the scraped news articles into an Excel report.
+        """
         if os.listdir(IMAGE_PATH):
             archiver = Archive()
             archiver.archive_folder_with_zip(IMAGE_PATH, OUTPUT_PATH + 'images.zip')
@@ -116,6 +160,9 @@ class NewsScraper:
         writer.save_workbook()
 
     def process(self):
+        """
+        Process the scraping of news articles.
+        """
         logger.info('Starting process')
         try:
             logger.info('Opening news site')

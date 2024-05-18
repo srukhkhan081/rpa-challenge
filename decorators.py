@@ -2,6 +2,9 @@ from selenium.common import TimeoutException
 
 
 def page_load(func):
+    """
+    Decorator to handle page load timeouts.
+    """
     def wrapper(*args, **kwargs):
         self = args[0]
         page_load_time = kwargs.get('page_load_time')
@@ -15,22 +18,16 @@ def page_load(func):
 
 
 def wait_element(func):
+    """
+    Decorator to wait for an element to be present on the page.
+    """
     def wrapper(*args, **kwargs):
+        """
+        Wrapper function to wait for an element to be present on the page.
+        """
         self = args[0]
         locator = args[1]
         self.driver.wait_until_page_contains_element(locator)
         self.driver.scroll_element_into_view(locator)
-        return func(*args, **kwargs)
-    return wrapper
-
-
-def handle_promo_pop_up(func):
-    def wrapper(*args, **kwargs):
-        self = args[0]
-        if self.check_if_element_exists('//modality-custom-element'):
-            element = self.driver.find_element('//modality-custom-element')
-            close_button = self.driver.driver.execute_script('return arguments[0].shadowRoot.querySelector("a")',
-                                                             element)
-            close_button.click()
         return func(*args, **kwargs)
     return wrapper

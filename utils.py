@@ -13,6 +13,15 @@ logger.addHandler(handler)
 
 
 def convert_string_to_date_time(datetime_string):
+    """
+    Convert a string representation of datetime to a datetime object.
+
+    Args:
+        datetime_string (str): The string representation of datetime.
+
+    Returns:
+        datetime.datetime: The datetime object.
+    """
     if "ago" not in datetime_string:
         return parser.parse(datetime_string)
     else:
@@ -25,6 +34,12 @@ def convert_string_to_date_time(datetime_string):
 
 
 def create_path_if_not_exists(path):
+    """
+    Create a directory if it doesn't exist.
+
+    Args:
+        path (str): The path of the directory to be created.
+    """
     if not os.path.exists(path):
         os.makedirs(path)
 
